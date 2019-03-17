@@ -92,4 +92,180 @@ class GenerateUniqueIdTest extends \PHPUnit_Framework_TestCase
             $result
         );
     }
+
+    public function testEmpty()
+    {
+        $request = [
+            'Attributes' => [
+                'eduPersonPrincipalName' => ['example.org'],
+            ],
+        ];
+        $result = self::processFilter([], $request);
+        $this->assertEquals(
+            [
+                'Attributes' => [
+                    'eduPersonPrincipalName' => ['example.org'],
+                ],
+            ],
+            $result
+        );
+    }
+
+    /**
+     * @expectedException SimpleSAML\Error\Exception
+     * @expectedExceptionMessage GenerateUniqueId: attribute encoding
+     */
+    public function testUnknownFormat()
+    {
+        $request = [
+            'Attributes' => [
+                'objectGUID' => ['I5g7hZt5rUC610q9s7Tleg=='],
+                'eduPersonPrincipalName' => ['nobody@example.org'],
+            ],
+        ];
+        $result = self::processFilter(
+            [
+                'encoding' => 'unknown',
+            ],
+            $request
+        );
+    }
+
+    public function testMicrosoft()
+    {
+        $request = [
+            'Attributes' => [
+                'objectGUID' => ['I5g7hZt5rUC610q9s7Tleg=='],
+                'eduPersonPrincipalName' => ['nobody@example.org'],
+            ],
+        ];
+        $result = self::processFilter(
+            [
+                'encoding' => 'microsoft',
+            ],
+            $request
+        );
+        $this->assertEquals(
+            [
+                'Attributes' => [
+                    'objectGUID' => ['I5g7hZt5rUC610q9s7Tleg=='],
+                    'eduPersonPrincipalName' => ['nobody@example.org'],
+                    'eduPersonUniqueId' => ['853b9823799b40adbad74abdb3b4e57a@example.org'],
+                ],
+            ],
+            $result
+        );
+    }
+
+     /**
+     * @expectedException SimpleSAML\Error\Exception
+     * @expectedExceptionMessage GenerateUniqueId: unable to unpack objectGUID
+     */
+   public function testBogusMicrosoft()
+    {
+        $request = [
+            'Attributes' => [
+                'objectGUID' => ['=='],
+                'eduPersonPrincipalName' => ['nobody@example.org'],
+            ],
+        ];
+        $result = self::processFilter(
+            [
+                'encoding' => 'microsoft',
+            ],
+            $request
+        );
+    }
+
+    public function testEdirectory()
+    {
+        $request = [
+            'Attributes' => [
+                'guid' => ['gOH1SbeT2hGsbgAH6UDz7g=='],
+                'eduPersonPrincipalName' => ['nobody@example.org'],
+            ],
+        ];
+        $result = self::processFilter(
+            [
+                'encoding' => 'edirectory',
+            ],
+            $request
+        );
+        $this->assertEquals(
+            [
+                'Attributes' => [
+                    'guid' => ['gOH1SbeT2hGsbgAH6UDz7g=='],
+                    'eduPersonPrincipalName' => ['nobody@example.org'],
+                    'eduPersonUniqueId' => ['80e1f549b793da11ac6e0007e940f3ee@example.org'],
+                ],
+            ],
+            $result
+        );
+    }
+
+     /**
+     * @expectedException SimpleSAML\Error\Exception
+     * @expectedExceptionMessage GenerateUniqueId: unable to unpack guid
+     */
+    public function testBogusEdirectory()
+    {
+        $request = [
+            'Attributes' => [
+                'guid' => ['=='],
+                'eduPersonPrincipalName' => ['nobody@example.org'],
+            ],
+        ];
+        $result = self::processFilter(
+            [
+                'encoding' => 'edirectory',
+            ],
+            $request
+        );
+    }
+
+    public function testOpenLdap()
+    {
+        $request = [
+            'Attributes' => [
+                'entryUUID' => ['914af8a6-d396-1038-966a-1f617ea1a993'],
+                'eduPersonPrincipalName' => ['nobody@example.org'],
+            ],
+        ];
+        $result = self::processFilter(
+            [
+                'encoding' => 'openldap',
+            ],
+            $request
+        );
+        $this->assertEquals(
+            [
+                'Attributes' => [
+                    'entryUUID' => ['914af8a6-d396-1038-966a-1f617ea1a993'],
+                    'eduPersonPrincipalName' => ['nobody@example.org'],
+                    'eduPersonUniqueId' => ['914af8a6d3961038966a1f617ea1a993@example.org'],
+                ],
+            ],
+            $result
+        );
+    }
+
+    /**
+     * @expectedException SimpleSAML\Error\Exception
+     * @expectedExceptionMessage GenerateUniqueId: unable to unpack entryUUID
+     */
+    public function testBogusOpenLdap()
+    {
+        $request = [
+            'Attributes' => [
+                'entryUUID' => ['=='],
+                'eduPersonPrincipalName' => ['nobody@example.org'],
+            ],
+        ];
+        $result = self::processFilter(
+            [
+                'encoding' => 'openldap',
+            ],
+            $request
+        );
+    }
 }
