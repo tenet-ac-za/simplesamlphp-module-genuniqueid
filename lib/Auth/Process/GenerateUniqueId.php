@@ -24,6 +24,9 @@ class GenerateUniqueId extends \SimpleSAML\Auth\ProcessingFilter
     /** @var string $encoding encoding of the GUID on the wire */
     private $encoding = 'microsoft';
 
+    /** @var bool|false $privacy Whether to hash the resulting UUID to preserve privacy */
+    private $privacy = false;
+
     /**
      * Initialize this filter, parse configuration.
      *
@@ -41,6 +44,9 @@ class GenerateUniqueId extends \SimpleSAML\Auth\ProcessingFilter
         }
         if (array_key_exists('scopeAttribute', $config)) {
             $this->scopeAttribute = (string)$config['scopeAttribute'];
+        }
+        if (array_key_exists('privacy', $config)) {
+            $this->privacy = (bool)$config['privacy'];
         }
         if (array_key_exists('encoding', $config)) {
             $this->encoding = strtolower((string)$config['encoding']);
@@ -156,6 +162,19 @@ class GenerateUniqueId extends \SimpleSAML\Auth\ProcessingFilter
     }
 
     /**
+     * Generate a privacy-preserving hash
+     *
+     * @param string $value uuid
+     * @param string $source authentication source
+     * @return string hashed version
+     * @throws \SimpleSAML\Error\Exception
+     */
+    private function privacyHash($value, $source = '')
+    {
+        return hash('sha256', $value.'|'.\SimpleSAML\Utils\Config::getSecretSalt().'|'.$source);
+    }
+
+    /**
      * Process this filter
      *
      * @param mixed &$request
@@ -205,6 +224,16 @@ class GenerateUniqueId extends \SimpleSAML\Auth\ProcessingFilter
                         'GenerateUniqueId: cowardly refusing to generate an empty unique id'
                     );
                     continue;
+                }
+
+                if ($this->privacy) {
+                    assert('array_key_exists("Source", $request)');
+                    if (array_key_exists('saml:sp:IdP', $request)) {
+                        $source = $request['saml:sp:IdP'];
+                    } else {
+                        $source = $request['Source']['entityid'];
+                    }
+                    $uuid = $this->privacyHash($uuid, $source);
                 }
 
                 $value = substr($uuid,0,64).'@'.$scope;

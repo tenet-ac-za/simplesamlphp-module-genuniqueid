@@ -21,6 +21,8 @@ The filter supports the following configuration options:
 > * `edirectory` - Base64 encoded, big-endian format. [`guid`].
 > * `openldap` - String UUID representation. [`entryUUID`].
 
+`privacy`
+:   Whether to hash the resulting value to preserve privacy (boolean, defaults to `false`).
 
 Examples
 --------

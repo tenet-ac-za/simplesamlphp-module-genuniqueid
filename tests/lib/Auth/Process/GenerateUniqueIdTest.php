@@ -20,7 +20,7 @@ class GenerateUniqueIdTest extends \PHPUnit_Framework_TestCase
 
     protected function setUp()
     {
-        \SimpleSAML\Configuration::loadFromArray([], '[ARRAY]', 'simplesaml');
+        \SimpleSAML\Configuration::loadFromArray(['secretsalt' => 'test'], '[ARRAY]', 'simplesaml');
     }
 
     public function testNoConfig()
@@ -108,6 +108,61 @@ class GenerateUniqueIdTest extends \PHPUnit_Framework_TestCase
                 ],
             ],
             $result
+        );
+    }
+
+    public function testPrivacyHash()
+    {
+        $request = [
+            'Attributes' => [
+                'objectGUID' => ['I5g7hZt5rUC610q9s7Tleg=='],
+                'eduPersonPrincipalName' => ['example.org'],
+            ],
+            'Source' => [
+                'entityid' => 'https://localhost/idp',
+            ],
+        ];
+        $result = self::processFilter(
+            [
+                'privacy' => true,
+            ],
+            $request
+        );
+        $this->assertEquals(
+            [
+                'objectGUID' => ['I5g7hZt5rUC610q9s7Tleg=='],
+                'eduPersonPrincipalName' => ['example.org'],
+                'eduPersonUniqueId' => ['81c1c9dd97912c8b9bc2ac502ab984d455694992e455d3bd6b98ad68696e04ff@example.org'],
+            ],
+            $result['Attributes']
+        );
+    }
+
+    public function testPrivacyHashProxied()
+    {
+        $request = [
+            'Attributes' => [
+                'objectGUID' => ['I5g7hZt5rUC610q9s7Tleg=='],
+                'eduPersonPrincipalName' => ['example.org'],
+            ],
+            'Source' => [
+                'entityid' => 'https://localhost/proxy',
+            ],
+            'saml:sp:IdP' => 'https://localhost/idp',
+        ];
+        $result = self::processFilter(
+            [
+                'privacy' => true,
+            ],
+            $request
+        );
+        $this->assertEquals(
+            [
+                'objectGUID' => ['I5g7hZt5rUC610q9s7Tleg=='],
+                'eduPersonPrincipalName' => ['example.org'],
+                'eduPersonUniqueId' => ['81c1c9dd97912c8b9bc2ac502ab984d455694992e455d3bd6b98ad68696e04ff@example.org'],
+            ],
+            $result['Attributes']
         );
     }
 
