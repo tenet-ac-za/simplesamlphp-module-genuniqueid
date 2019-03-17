@@ -1,0 +1,35 @@
+{
+    "name": "safire-ac-za/simplesamlphp-module-genuniqueid",
+    "description": "SimpleSAMLphp module to generate an eduPersonUniqueId attribute from various LDAP implementations' objectGUID",
+    "type": "simplesamlphp-module",
+    "keywords": ["simplesamlphp", "genuniqueid", "eduPersonUniqueId", "LDAP", "ObjectGUID"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Guy Halse",
+            "homepage": "http://orcid.org/0000-0002-9388-8592"
+        }
+    ],
+    "require": {
+        "php": ">=5.6",
+        "simplesamlphp/composer-module-installer": "~1.1"
+    },
+    "require-dev": {
+        "simplesamlphp/simplesamlphp": ">=1.17",
+        "phpunit/phpunit": "~4.8"
+    },
+    "autoload": {
+        "psr-4": {
+            "SimpleSAML\\Module\\genuniqueid\\": "lib/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "SimpleSAML\\Test\\Utils\\": "vendor/simplesamlphp/simplesamlphp/tests/Utils"
+        }
+    },
+    "support": {
+        "issues": "https://github.com/safire-ac-za/simplesamlphp-module-genuniqueid/issues",
+        "source": "https://github.com/safire-ac-za/simplesamlphp-module-genuniqueid"
+    }
+}
