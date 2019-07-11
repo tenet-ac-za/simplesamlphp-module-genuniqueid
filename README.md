@@ -1,5 +1,7 @@
-genuniqueid:GenerateUniqueId     [![Build Status](https://travis-ci.org/safire-ac-za/simplesamlphp-module-genuniqueid.svg?branch=master)](https://travis-ci.org/safire-ac-za/simplesamlphp-module-genuniqueid)
+genuniqueid:GenerateUniqueId
 ============================
+[![Build Status](https://travis-ci.org/safire-ac-za/simplesamlphp-module-genuniqueid.svg?branch=master)](https://travis-ci.org/safire-ac-za/simplesamlphp-module-genuniqueid)
+[![Coverage Status](https://img.shields.io/coveralls/safire-ac-za/simplesamlphp-module-genuniqueid.svg)](https://coveralls.io/r/safire-ac-za/simplesamlphp-module-genuniqueid)
 
 Generate an eduPersonUniqueId attribute from various LDAP implementations' objectGUID
 
