@@ -37,7 +37,7 @@ class GenerateUniqueId extends \SimpleSAML\Auth\ProcessingFilter
     public function __construct($config, $reserved)
     {
         parent::__construct($config, $reserved);
-        assert('is_array($config)');
+        assert(is_array($config));
 
         if (array_key_exists('targetAttribute', $config)) {
             $this->targetAttribute = (string)$config['targetAttribute'];
@@ -183,8 +183,8 @@ class GenerateUniqueId extends \SimpleSAML\Auth\ProcessingFilter
      */
     public function process(&$request)
     {
-        assert('is_array($request)');
-        assert('array_key_exists("Attributes", $request)');
+        assert(is_array($request));
+        assert(array_key_exists("Attributes", $request));
 
         if (!isset($request['Attributes'][$this->scopeAttribute])) {
             return;
@@ -227,7 +227,7 @@ class GenerateUniqueId extends \SimpleSAML\Auth\ProcessingFilter
                 }
 
                 if ($this->privacy) {
-                    assert('array_key_exists("Source", $request)');
+                    assert(array_key_exists("Source", $request));
                     if (array_key_exists('saml:sp:IdP', $request)) {
                         $source = $request['saml:sp:IdP'];
                     } else {
