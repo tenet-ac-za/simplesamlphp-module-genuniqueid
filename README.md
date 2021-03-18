@@ -1,7 +1,7 @@
 genuniqueid:GenerateUniqueId
 ============================
-[![Build Status](https://travis-ci.org/safire-ac-za/simplesamlphp-module-genuniqueid.svg?branch=master)](https://travis-ci.org/safire-ac-za/simplesamlphp-module-genuniqueid)
-[![Coverage Status](https://img.shields.io/coveralls/safire-ac-za/simplesamlphp-module-genuniqueid.svg)](https://coveralls.io/r/safire-ac-za/simplesamlphp-module-genuniqueid)
+[![Build Status](https://travis-ci.org/tenet-ac-za/simplesamlphp-module-genuniqueid.svg?branch=master)](https://travis-ci.org/tenet-ac-za/simplesamlphp-module-genuniqueid)
+[![Coverage Status](https://img.shields.io/coveralls/tenet-ac-za/simplesamlphp-module-genuniqueid.svg)](https://coveralls.io/r/tenet-ac-za/simplesamlphp-module-genuniqueid)
 
 Generate an eduPersonUniqueId attribute from various LDAP implementations' objectGUID
 
@@ -18,10 +18,10 @@ composer.phar require safire-ac-za/simplesamlphp-module-genuniqueid:dev-master
 
 where `dev-master` instructs Composer to install the `master` (**development**)
 branch from the Git repository. See the
-[releases](https://github.com/safire-ac-za/simplesamlphp-module-genuniqueid/releases)
+[releases](https://github.com/tenet-ac-za/simplesamlphp-module-genuniqueid/releases)
 available if you want to use a stable version of the module.
 
 Documentation
 -------------
 
-See [docs/authproc_genuniqueid.md](https://github.com/safire-ac-za/simplesamlphp-module-genuniqueid/blob/master/docs/authproc_genuniqueid.md).
+See [docs/authproc_genuniqueid.md](https://github.com/tenet-ac-za/simplesamlphp-module-genuniqueid/blob/master/docs/authproc_genuniqueid.md).

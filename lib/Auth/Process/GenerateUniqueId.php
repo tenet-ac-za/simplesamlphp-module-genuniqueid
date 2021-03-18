@@ -6,7 +6,7 @@ namespace SimpleSAML\Module\genuniqueid\Auth\Process;
  * Generate an eduPersonUniqueId attribute from various LDAP implementations' objectGUID
  *
  * @author    Guy Halse, http://orcid.org/0000-0002-9388-8592
- * @copyright Copyright (c) 2019, SAFIRE - South African Identity Federation
+ * @copyright Copyright (c) 2019, Tertiary Education and Research Network of South Africa
  * @package   SimpleSAMLphp
  */
 
