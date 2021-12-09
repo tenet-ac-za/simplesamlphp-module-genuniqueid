@@ -2,7 +2,9 @@
 
 namespace SimpleSAML\Test\Module\genuniqueid\Auth\Process;
 
-class GenerateUniqueIdTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class GenerateUniqueIdTest extends TestCase
 {
     /**
      * Helper function to run the filter with a given configuration.
@@ -18,7 +20,7 @@ class GenerateUniqueIdTest extends \PHPUnit_Framework_TestCase
         return $request;
     }
 
-    protected function setUp()
+    protected function setUp(): void
     {
         \SimpleSAML\Configuration::loadFromArray(['secretsalt' => 'test'], '[ARRAY]', 'simplesaml');
     }
@@ -166,10 +168,6 @@ class GenerateUniqueIdTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    /**
-     * @expectedException SimpleSAML\Error\Exception
-     * @expectedExceptionMessage GenerateUniqueId: attribute encoding
-     */
     public function testUnknownFormat()
     {
         $request = [
@@ -178,6 +176,8 @@ class GenerateUniqueIdTest extends \PHPUnit_Framework_TestCase
                 'eduPersonPrincipalName' => ['nobody@example.org'],
             ],
         ];
+        $this->expectException("SimpleSAML\Error\Exception");
+        $this->expectExceptionMessage("attribute encoding");
         $result = self::processFilter(
             [
                 'encoding' => 'unknown',
@@ -212,10 +212,6 @@ class GenerateUniqueIdTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-     /**
-     * @expectedException SimpleSAML\Error\Exception
-     * @expectedExceptionMessage GenerateUniqueId: unable to unpack objectGUID
-     */
    public function testBogusMicrosoft()
     {
         $request = [
@@ -224,6 +220,8 @@ class GenerateUniqueIdTest extends \PHPUnit_Framework_TestCase
                 'eduPersonPrincipalName' => ['nobody@example.org'],
             ],
         ];
+        $this->expectException("SimpleSAML\Error\Exception");
+        $this->expectExceptionMessage("GenerateUniqueId: unable to unpack objectGUID");
         $result = self::processFilter(
             [
                 'encoding' => 'microsoft',
@@ -258,10 +256,6 @@ class GenerateUniqueIdTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-     /**
-     * @expectedException SimpleSAML\Error\Exception
-     * @expectedExceptionMessage GenerateUniqueId: unable to unpack guid
-     */
     public function testBogusEdirectory()
     {
         $request = [
@@ -270,6 +264,8 @@ class GenerateUniqueIdTest extends \PHPUnit_Framework_TestCase
                 'eduPersonPrincipalName' => ['nobody@example.org'],
             ],
         ];
+        $this->expectException("SimpleSAML\Error\Exception");
+        $this->expectExceptionMessage("GenerateUniqueId: unable to unpack guid");
         $result = self::processFilter(
             [
                 'encoding' => 'edirectory',
@@ -304,10 +300,6 @@ class GenerateUniqueIdTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    /**
-     * @expectedException SimpleSAML\Error\Exception
-     * @expectedExceptionMessage GenerateUniqueId: unable to unpack entryUUID
-     */
     public function testBogusOpenLdap()
     {
         $request = [
@@ -316,6 +308,8 @@ class GenerateUniqueIdTest extends \PHPUnit_Framework_TestCase
                 'eduPersonPrincipalName' => ['nobody@example.org'],
             ],
         ];
+        $this->expectException("SimpleSAML\Error\Exception");
+        $this->expectExceptionMessage("GenerateUniqueId: unable to unpack entryUUID");
         $result = self::processFilter(
             [
                 'encoding' => 'openldap',
