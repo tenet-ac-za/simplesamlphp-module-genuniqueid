@@ -1,7 +1,7 @@
 genuniqueid:GenerateUniqueId
 ============================
-[![Build Status](https://travis-ci.org/tenet-ac-za/simplesamlphp-module-genuniqueid.svg?branch=master)](https://travis-ci.org/tenet-ac-za/simplesamlphp-module-genuniqueid)
-[![Coverage Status](https://img.shields.io/coveralls/tenet-ac-za/simplesamlphp-module-genuniqueid.svg)](https://coveralls.io/r/tenet-ac-za/simplesamlphp-module-genuniqueid)
+![Build Status](https://github.com/tenet-ac-za/simplesamlphp-module-genuniqueid/workflows/CI/badge.svg?branch=master)
+[![Coverage Status](https://codecov.io/gh/tenet-ac-za/simplesamlphp-module-genuniqueid/branch/master/graph/badge.svg)](https://codecov.io/gh/tenet-ac-za/simplesamlphp-module-genuniqueid)
 
 Generate an eduPersonUniqueId attribute from various LDAP implementations' objectGUID
 
