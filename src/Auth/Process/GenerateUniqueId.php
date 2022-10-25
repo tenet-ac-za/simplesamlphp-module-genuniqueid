@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace SimpleSAML\Module\genuniqueid\Auth\Process;
 
+use SimpleSAML\Logger;
+
 /**
  * Generate an eduPersonUniqueId attribute from various LDAP implementations' objectGUID
  *
@@ -15,19 +17,19 @@ namespace SimpleSAML\Module\genuniqueid\Auth\Process;
 class GenerateUniqueId extends \SimpleSAML\Auth\ProcessingFilter
 {
     /** @var string $sourceAttribute The attribute we want to get a GUID from */
-    private $sourceAttribute;
+    private string $sourceAttribute;
 
     /** @var string $targetAttribute The attribute we want to put a scoped unique Id into */
-    private $targetAttribute = 'eduPersonUniqueId';
+    private string $targetAttribute = 'eduPersonUniqueId';
 
     /** @var string $scopeAttribute The attribute we extract the scope from. */
-    private $scopeAttribute = 'eduPersonPrincipalName';
+    private string $scopeAttribute = 'eduPersonPrincipalName';
 
     /** @var string $encoding encoding of the GUID on the wire */
-    private $encoding = 'microsoft';
+    private string $encoding = 'microsoft';
 
     /** @var bool|false $privacy Whether to hash the resulting UUID to preserve privacy */
-    private $privacy = false;
+    private bool $privacy = false;
 
     /**
      * Initialize this filter, parse configuration.
@@ -36,10 +38,9 @@ class GenerateUniqueId extends \SimpleSAML\Auth\ProcessingFilter
      * @param mixed $reserved For future use.
      * @throws \SimpleSAML\Error\Exception
      */
-    public function __construct($config, $reserved)
+    public function __construct(array $config, $reserved)
     {
         parent::__construct($config, $reserved);
-        assert(is_array($config));
 
         if (array_key_exists('targetAttribute', $config)) {
             $this->targetAttribute = (string)$config['targetAttribute'];
@@ -68,7 +69,7 @@ class GenerateUniqueId extends \SimpleSAML\Auth\ProcessingFilter
                 break;
             default:
                 throw new \SimpleSAML\Error\Exception(
-                    'GenerateUniqueId: attribute encoding "'.$this->encoding.'" is not known.'
+                    'GenerateUniqueId: attribute encoding "' . $this->encoding . '" is not known.'
                 );
         }
         /* now allow it to be overridden in config */
@@ -85,7 +86,7 @@ class GenerateUniqueId extends \SimpleSAML\Auth\ProcessingFilter
      * @return string decoded guid
      * @throws \SimpleSAML\Error\Exception
      */
-    private function decodeActiveDirectory($value)
+    private function decodeActiveDirectory(string $value): string
     {
         try {
             $decoded = base64_decode($value);
@@ -103,7 +104,7 @@ class GenerateUniqueId extends \SimpleSAML\Auth\ProcessingFilter
             );
         } catch (\Exception $e) {
             throw new \SimpleSAML\Error\Exception(
-                "GenerateUniqueId: unable to unpack ".$this->sourceAttribute.": ".$e->getMessage()
+                "GenerateUniqueId: unable to unpack " . $this->sourceAttribute . ": " . $e->getMessage()
             );
         }
         return $guid;
@@ -116,7 +117,7 @@ class GenerateUniqueId extends \SimpleSAML\Auth\ProcessingFilter
      * @return string decoded guid
      * @throws \SimpleSAML\Error\Exception
      */
-    private function decodeBinaryBigEndian($value)
+    private function decodeBinaryBigEndian(string $value): string
     {
         try {
             $decoded = base64_decode($value);
@@ -134,7 +135,7 @@ class GenerateUniqueId extends \SimpleSAML\Auth\ProcessingFilter
             );
         } catch (\Exception $e) {
             throw new \SimpleSAML\Error\Exception(
-                "GenerateUniqueId: unable to unpack ".$this->sourceAttribute.": ".$e->getMessage()
+                "GenerateUniqueId: unable to unpack " . $this->sourceAttribute . ": " . $e->getMessage()
             );
         }
         return $guid;
@@ -147,9 +148,10 @@ class GenerateUniqueId extends \SimpleSAML\Auth\ProcessingFilter
      * @return string decoded uuid
      * @throws \SimpleSAML\Error\Exception
      */
-    private function decodeUuidString($value)
+    private function decodeUuidString(string $value): string
     {
-        if (preg_match(
+        if (
+            preg_match(
                 '/^([0-9a-f]{8})\-?([0-9a-f]{4})\-?([0-9a-f]{4})\-?([0-9a-f]{4})\-?([0-9a-f]{12})$/',
                 strtolower($value),
                 $m
@@ -158,7 +160,7 @@ class GenerateUniqueId extends \SimpleSAML\Auth\ProcessingFilter
             return implode('', array_slice($m, 1, 5));
         } else {
             throw new \SimpleSAML\Error\Exception(
-                "GenerateUniqueId: unable to unpack ".$this->sourceAttribute
+                "GenerateUniqueId: unable to unpack " . $this->sourceAttribute
             );
         }
     }
@@ -171,41 +173,40 @@ class GenerateUniqueId extends \SimpleSAML\Auth\ProcessingFilter
      * @return string hashed version
      * @throws \SimpleSAML\Error\Exception
      */
-    private function privacyHash($value, $source = '')
+    private function privacyHash(string $value, string $source = ''): string
     {
-        return hash('sha256', $value.'|'.\SimpleSAML\Utils\Config::getSecretSalt().'|'.$source);
+        $salter = new \SimpleSAML\Utils\Config();
+        return hash('sha256', $value . '|' . $salter->getSecretSalt() . '|' . $source);
     }
 
     /**
      * Process this filter
      *
-     * @param mixed &$request
+     * @param mixed &$state
      * @throws \SimpleSAML\Error\Exception
      * @return void
      */
-    public function process(&$request): void
+    public function process(array &$state): void
     {
-        assert(is_array($request));
-        assert(array_key_exists("Attributes", $request));
+        assert(array_key_exists("Attributes", $state));
 
-        if (!isset($request['Attributes'][$this->scopeAttribute])) {
+        if (!isset($state['Attributes'][$this->scopeAttribute])) {
             return;
         }
-        if (!isset($request['Attributes'][$this->sourceAttribute])) {
+        if (!isset($state['Attributes'][$this->sourceAttribute])) {
             return;
         }
-        if (!isset($request['Attributes'][$this->targetAttribute])) {
-            $request['Attributes'][$this->targetAttribute] = [];
+        if (!isset($state['Attributes'][$this->targetAttribute])) {
+            $state['Attributes'][$this->targetAttribute] = [];
         }
 
-        foreach ($request['Attributes'][$this->scopeAttribute] as $scope) {
+        foreach ($state['Attributes'][$this->scopeAttribute] as $scope) {
             if (strpos($scope, '@') !== false) {
                 $scope = explode('@', $scope, 2);
                 $scope = $scope[1];
             }
 
-            foreach ($request['Attributes'][$this->sourceAttribute] as $value) {
-
+            foreach ($state['Attributes'][$this->sourceAttribute] as $value) {
                 switch ($this->encoding) {
                     case 'microsoft':
                     case 'activedirectory':
@@ -218,32 +219,32 @@ class GenerateUniqueId extends \SimpleSAML\Auth\ProcessingFilter
                         $uuid = $this->decodeUuidString($value);
                         break;
                     default:
-                        $uuid = preg_replace('/[^a-z0-9]/','', $value);
+                        $uuid = preg_replace('/[^a-z0-9]/', '', $value);
                 }
 
                 if ($uuid === null or $uuid === '') {
-                    \SimpleSAML\Logger::warning(
+                    Logger::warning(
                         'GenerateUniqueId: cowardly refusing to generate an empty unique id'
                     );
                     continue;
                 }
 
                 if ($this->privacy) {
-                    assert(array_key_exists("Source", $request));
-                    if (array_key_exists('saml:sp:IdP', $request)) {
-                        $source = $request['saml:sp:IdP'];
+                    assert(array_key_exists("Source", $state));
+                    if (array_key_exists('saml:sp:IdP', $state)) {
+                        $source = $state['saml:sp:IdP'];
                     } else {
-                        $source = $request['Source']['entityid'];
+                        $source = $state['Source']['entityid'];
                     }
                     $uuid = $this->privacyHash($uuid, $source);
                 }
 
-                $value = substr($uuid,0,64).'@'.$scope;
-                if (in_array($value, $request['Attributes'][$this->targetAttribute], true)) {
+                $value = substr($uuid, 0, 64) . '@' . $scope;
+                if (in_array($value, $state['Attributes'][$this->targetAttribute], true)) {
                     // Already present
                     continue;
                 }
-                $request['Attributes'][$this->targetAttribute][] = $value;
+                $state['Attributes'][$this->targetAttribute][] = $value;
             }
         }
     }

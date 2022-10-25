@@ -4,7 +4,7 @@ namespace SimpleSAML\Test\Module\genuniqueid\Auth\Process;
 
 use PHPUnit\Framework\TestCase;
 
-class GenerateUniqueIdTest extends TestCase
+final class GenerateUniqueIdTest extends TestCase
 {
     /**
      * Helper function to run the filter with a given configuration.
@@ -25,7 +25,7 @@ class GenerateUniqueIdTest extends TestCase
         \SimpleSAML\Configuration::loadFromArray(['secretsalt' => 'test'], '[ARRAY]', 'simplesaml');
     }
 
-    public function testNoConfig()
+    public function testNoConfig(): void
     {
         $request = [
             'Attributes' => [
@@ -46,7 +46,7 @@ class GenerateUniqueIdTest extends TestCase
         );
     }
 
-    public function testScopeAttributeWithAt()
+    public function testScopeAttributeWithAt(): void
     {
         $request = [
             'Attributes' => [
@@ -67,7 +67,7 @@ class GenerateUniqueIdTest extends TestCase
         );
     }
 
-    public function testDifferentAttributes()
+    public function testDifferentAttributes(): void
     {
         $request = [
             'Attributes' => [
@@ -95,7 +95,7 @@ class GenerateUniqueIdTest extends TestCase
         );
     }
 
-    public function testEmpty()
+    public function testEmpty(): void
     {
         $request = [
             'Attributes' => [
@@ -113,7 +113,7 @@ class GenerateUniqueIdTest extends TestCase
         );
     }
 
-    public function testPrivacyHash()
+    public function testPrivacyHash(): void
     {
         $request = [
             'Attributes' => [
@@ -140,7 +140,7 @@ class GenerateUniqueIdTest extends TestCase
         );
     }
 
-    public function testPrivacyHashProxied()
+    public function testPrivacyHashProxied(): void
     {
         $request = [
             'Attributes' => [
@@ -168,7 +168,7 @@ class GenerateUniqueIdTest extends TestCase
         );
     }
 
-    public function testUnknownFormat()
+    public function testUnknownFormat(): void
     {
         $request = [
             'Attributes' => [
@@ -186,7 +186,7 @@ class GenerateUniqueIdTest extends TestCase
         );
     }
 
-    public function testMicrosoft()
+    public function testMicrosoft(): void
     {
         $request = [
             'Attributes' => [
@@ -212,7 +212,7 @@ class GenerateUniqueIdTest extends TestCase
         );
     }
 
-   public function testBogusMicrosoft()
+    public function testBogusMicrosoft(): void
     {
         $request = [
             'Attributes' => [
@@ -230,7 +230,7 @@ class GenerateUniqueIdTest extends TestCase
         );
     }
 
-    public function testEdirectory()
+    public function testEdirectory(): void
     {
         $request = [
             'Attributes' => [
@@ -256,7 +256,7 @@ class GenerateUniqueIdTest extends TestCase
         );
     }
 
-    public function testBogusEdirectory()
+    public function testBogusEdirectory(): void
     {
         $request = [
             'Attributes' => [
@@ -274,7 +274,7 @@ class GenerateUniqueIdTest extends TestCase
         );
     }
 
-    public function testOpenLdap()
+    public function testOpenLdap(): void
     {
         $request = [
             'Attributes' => [
@@ -300,7 +300,7 @@ class GenerateUniqueIdTest extends TestCase
         );
     }
 
-    public function testBogusOpenLdap()
+    public function testBogusOpenLdap(): void
     {
         $request = [
             'Attributes' => [
