@@ -176,7 +176,7 @@ final class GenerateUniqueIdTest extends TestCase
                 'eduPersonPrincipalName' => ['nobody@example.org'],
             ],
         ];
-        $this->expectException("SimpleSAML\Error\Exception");
+        $this->expectException(\SimpleSAML\Error\Exception::class);
         $this->expectExceptionMessage("attribute encoding");
         $result = self::processFilter(
             [
@@ -220,7 +220,7 @@ final class GenerateUniqueIdTest extends TestCase
                 'eduPersonPrincipalName' => ['nobody@example.org'],
             ],
         ];
-        $this->expectException("SimpleSAML\Error\Exception");
+        $this->expectException(\SimpleSAML\Error\Exception::class);
         $this->expectExceptionMessage("GenerateUniqueId: unable to unpack objectGUID");
         $result = self::processFilter(
             [
@@ -264,7 +264,7 @@ final class GenerateUniqueIdTest extends TestCase
                 'eduPersonPrincipalName' => ['nobody@example.org'],
             ],
         ];
-        $this->expectException("SimpleSAML\Error\Exception");
+        $this->expectException(\SimpleSAML\Error\Exception::class);
         $this->expectExceptionMessage("GenerateUniqueId: unable to unpack guid");
         $result = self::processFilter(
             [
@@ -308,7 +308,7 @@ final class GenerateUniqueIdTest extends TestCase
                 'eduPersonPrincipalName' => ['nobody@example.org'],
             ],
         ];
-        $this->expectException("SimpleSAML\Error\Exception");
+        $this->expectException(\SimpleSAML\Error\Exception::class);
         $this->expectExceptionMessage("GenerateUniqueId: unable to unpack entryUUID");
         $result = self::processFilter(
             [
