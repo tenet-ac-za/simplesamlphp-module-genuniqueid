@@ -2,6 +2,7 @@
   "symbol-whitelist": [
     "SimpleSAML\\Auth\\ProcessingFilter",
     "SimpleSAML\\Error\\Exception",
-    "SimpleSAML\\Logger"
+    "SimpleSAML\\Logger",
+    "SimpleSAML\\Utils\\Config"
   ]
 }
