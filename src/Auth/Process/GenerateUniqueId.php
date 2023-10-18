@@ -5,7 +5,10 @@ declare(strict_types=1);
 namespace SimpleSAML\Module\genuniqueid\Auth\Process;
 
 use SimpleSAML\Assert\Assert;
+use SimpleSAML\Auth;
+use SimpleSAML\Error;
 use SimpleSAML\Logger;
+use SimpleSAML\Utils;
 
 /**
  * Generate an eduPersonUniqueId attribute from various LDAP implementations' objectGUID
@@ -15,7 +18,7 @@ use SimpleSAML\Logger;
  * @package   SimpleSAMLphp
  */
 
-class GenerateUniqueId extends \SimpleSAML\Auth\ProcessingFilter
+class GenerateUniqueId extends Auth\ProcessingFilter
 {
     /** @var string $sourceAttribute The attribute we want to get a GUID from */
     private string $sourceAttribute;
@@ -69,7 +72,7 @@ class GenerateUniqueId extends \SimpleSAML\Auth\ProcessingFilter
                 $this->sourceAttribute = 'entryUUID';
                 break;
             default:
-                throw new \SimpleSAML\Error\Exception(
+                throw new Error\Exception(
                     'GenerateUniqueId: attribute encoding "' . $this->encoding . '" is not known.'
                 );
         }
@@ -104,7 +107,7 @@ class GenerateUniqueId extends \SimpleSAML\Auth\ProcessingFilter
                 )
             );
         } catch (\Exception $e) {
-            throw new \SimpleSAML\Error\Exception(
+            throw new Error\Exception(
                 "GenerateUniqueId: unable to unpack " . $this->sourceAttribute . ": " . $e->getMessage()
             );
         }
@@ -135,7 +138,7 @@ class GenerateUniqueId extends \SimpleSAML\Auth\ProcessingFilter
                 )
             );
         } catch (\Exception $e) {
-            throw new \SimpleSAML\Error\Exception(
+            throw new Error\Exception(
                 "GenerateUniqueId: unable to unpack " . $this->sourceAttribute . ": " . $e->getMessage()
             );
         }
@@ -160,7 +163,7 @@ class GenerateUniqueId extends \SimpleSAML\Auth\ProcessingFilter
         ) {
             return implode('', array_slice($m, 1, 5));
         } else {
-            throw new \SimpleSAML\Error\Exception(
+            throw new Error\Exception(
                 "GenerateUniqueId: unable to unpack " . $this->sourceAttribute
             );
         }
@@ -176,7 +179,7 @@ class GenerateUniqueId extends \SimpleSAML\Auth\ProcessingFilter
      */
     private function privacyHash(string $value, string $source = ''): string
     {
-        $salter = new \SimpleSAML\Utils\Config();
+        $salter = new Utils\Config();
         return hash('sha256', $value . '|' . $salter->getSecretSalt() . '|' . $source);
     }
 
