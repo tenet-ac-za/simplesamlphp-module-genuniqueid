@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace SimpleSAML\Module\genuniqueid\Auth\Process;
 
+use SimpleSAML\Assert\Assert;
 use SimpleSAML\Logger;
 
 /**
@@ -188,7 +189,7 @@ class GenerateUniqueId extends \SimpleSAML\Auth\ProcessingFilter
      */
     public function process(array &$state): void
     {
-        assert(array_key_exists("Attributes", $state));
+        Assert::keyExists($state, "Attributes");
 
         if (!isset($state['Attributes'][$this->scopeAttribute])) {
             return;
@@ -230,7 +231,7 @@ class GenerateUniqueId extends \SimpleSAML\Auth\ProcessingFilter
                 }
 
                 if ($this->privacy) {
-                    assert(array_key_exists("Source", $state));
+                    Assert::keyExists($state, "Source");
                     if (array_key_exists('saml:sp:IdP', $state)) {
                         $source = $state['saml:sp:IdP'];
                     } else {
