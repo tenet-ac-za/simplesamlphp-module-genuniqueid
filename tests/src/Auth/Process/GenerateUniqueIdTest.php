@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace SimpleSAML\Test\Module\genuniqueid\Auth\Process;
 
 use PHPUnit\Framework\TestCase;
+use SimpleSAML\Assert;
 use SimpleSAML\Configuration;
 use SimpleSAML\Error;
 use SimpleSAML\Module\genuniqueid\Auth\Process\GenerateUniqueId;
@@ -225,14 +226,15 @@ final class GenerateUniqueIdTest extends TestCase
                 'eduPersonPrincipalName' => ['nobody@example.org'],
             ],
         ];
-        $this->expectException(Error\Exception::class);
-        $this->expectExceptionMessage("GenerateUniqueId: unable to unpack objectGUID");
+        $this->expectException(Assert\AssertionFailedException::class);
+        $this->expectExceptionMessage("unable to unpack objectGUID:");
         $result = self::processFilter(
             [
                 'encoding' => 'microsoft',
             ],
             $request
         );
+        $this->assertEquals($result['eduPersonUniqueId'], '');
     }
 
     public function testEdirectory(): void
@@ -269,8 +271,8 @@ final class GenerateUniqueIdTest extends TestCase
                 'eduPersonPrincipalName' => ['nobody@example.org'],
             ],
         ];
-        $this->expectException(Error\Exception::class);
-        $this->expectExceptionMessage("GenerateUniqueId: unable to unpack guid");
+        $this->expectException(Assert\AssertionFailedException::class);
+        $this->expectExceptionMessage("unable to unpack guid:");
         $result = self::processFilter(
             [
                 'encoding' => 'edirectory',
@@ -313,8 +315,8 @@ final class GenerateUniqueIdTest extends TestCase
                 'eduPersonPrincipalName' => ['nobody@example.org'],
             ],
         ];
-        $this->expectException(Error\Exception::class);
-        $this->expectExceptionMessage("GenerateUniqueId: unable to unpack entryUUID");
+        $this->expectException(Assert\AssertionFailedException::class);
+        $this->expectExceptionMessage("unable to unpack entryUUID");
         $result = self::processFilter(
             [
                 'encoding' => 'openldap',

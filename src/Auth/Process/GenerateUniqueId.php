@@ -88,29 +88,27 @@ class GenerateUniqueId extends Auth\ProcessingFilter
      *
      * @param string $value base64 encoded value from LDAP
      * @return string decoded guid
-     * @throws \SimpleSAML\Error\Exception
+     * @throws \SimpleSAML\Assert\AssertionFailedException
      */
     private function decodeActiveDirectory(string $value): string
     {
-        try {
-            $decoded = base64_decode($value);
-            $unpacked = unpack('Va/v2b/n2c/Nd', $decoded);
-            $guid = strtolower(
-                sprintf(
-                    '%08X%04X%04X%04X%04X%08X',
-                    $unpacked['a'],
-                    $unpacked['b1'],
-                    $unpacked['b2'],
-                    $unpacked['c1'],
-                    $unpacked['c2'],
-                    $unpacked['d']
-                )
-            );
-        } catch (\Exception $e) {
-            throw new Error\Exception(
-                "GenerateUniqueId: unable to unpack " . $this->sourceAttribute . ": " . $e->getMessage()
-            );
-        }
+        $decoded = base64_decode($value);
+        Assert::notFalse($decoded, 'unable to unpack ' . $this->sourceAttribute . ': base64_decode failed');
+        Assert::minLength($decoded, 12, 'unable to unpack ' . $this->sourceAttribute . ': decoded string too short');
+        $unpacked = unpack('Va/v2b/n2c/Nd', $decoded);
+        Assert::notFalse($unpacked, 'unable to unpack ' . $this->sourceAttribute . ': unpack failed');
+        $guid = strtolower(
+            sprintf(
+                '%08X%04X%04X%04X%04X%08X',
+                $unpacked['a'],
+                $unpacked['b1'],
+                $unpacked['b2'],
+                $unpacked['c1'],
+                $unpacked['c2'],
+                $unpacked['d']
+            )
+        );
+        Assert::length($guid, 32, 'unable to unpack ' . $this->sourceAttribute . ': repack failed');
         return $guid;
     }
 
@@ -119,29 +117,27 @@ class GenerateUniqueId extends Auth\ProcessingFilter
      *
      * @param string $value base64 encoded value from LDAP
      * @return string decoded guid
-     * @throws \SimpleSAML\Error\Exception
+     * @throws \SimpleSAML\Assert\AssertionFailedException
      */
     private function decodeBinaryBigEndian(string $value): string
     {
-        try {
-            $decoded = base64_decode($value);
-            $unpacked = unpack('Na/n2b/n2c/Nd', $decoded);
-            $guid = strtolower(
-                sprintf(
-                    '%08X%04X%04X%04X%04X%08X',
-                    $unpacked['a'],
-                    $unpacked['b1'],
-                    $unpacked['b2'],
-                    $unpacked['c1'],
-                    $unpacked['c2'],
-                    $unpacked['d']
-                )
-            );
-        } catch (\Exception $e) {
-            throw new Error\Exception(
-                "GenerateUniqueId: unable to unpack " . $this->sourceAttribute . ": " . $e->getMessage()
-            );
-        }
+        $decoded = base64_decode($value, true);
+        Assert::notFalse($decoded, 'unable to unpack ' . $this->sourceAttribute . ': base64_decode failed');
+        Assert::minLength($decoded, 12, 'unable to unpack ' . $this->sourceAttribute . ': decoded string too short');
+        $unpacked = unpack('Na/n2b/n2c/Nd', $decoded);
+        Assert::notFalse($unpacked, 'unable to unpack ' . $this->sourceAttribute . ': unpack failed');
+        $guid = strtolower(
+            sprintf(
+                '%08X%04X%04X%04X%04X%08X',
+                $unpacked['a'],
+                $unpacked['b1'],
+                $unpacked['b2'],
+                $unpacked['c1'],
+                $unpacked['c2'],
+                $unpacked['d']
+            )
+        );
+        Assert::length($guid, 32, 'unable to unpack ' . $this->sourceAttribute . ': repack failed');
         return $guid;
     }
 
@@ -150,23 +146,20 @@ class GenerateUniqueId extends Auth\ProcessingFilter
      *
      * @param string $value value from LDAP
      * @return string decoded uuid
-     * @throws \SimpleSAML\Error\Exception
+     * @throws \SimpleSAML\Assert\AssertionFailedException
      */
     private function decodeUuidString(string $value): string
     {
-        if (
-            preg_match(
-                '/^([0-9a-f]{8})\-?([0-9a-f]{4})\-?([0-9a-f]{4})\-?([0-9a-f]{4})\-?([0-9a-f]{12})$/',
-                strtolower($value),
-                $m
-            )
-        ) {
-            return implode('', array_slice($m, 1, 5));
-        } else {
-            throw new Error\Exception(
-                "GenerateUniqueId: unable to unpack " . $this->sourceAttribute
-            );
-        }
+        preg_match(
+            '/^([0-9a-f]{8})\-?([0-9a-f]{4})\-?([0-9a-f]{4})\-?([0-9a-f]{4})\-?([0-9a-f]{12})$/',
+            strtolower($value),
+            $m
+        );
+        Assert::count($m, 6, 'unable to unpack ' . $this->sourceAttribute . ': wrong number of parts in uuid');
+
+        $guid = implode('', array_slice($m, 1, 5));
+        Assert::length($guid, 32, 'unable to unpack ' . $this->sourceAttribute . ': repack failed');
+        return $guid;
     }
 
     /**
@@ -175,7 +168,6 @@ class GenerateUniqueId extends Auth\ProcessingFilter
      * @param string $value uuid
      * @param string $source authentication source
      * @return string hashed version
-     * @throws \SimpleSAML\Error\Exception
      */
     private function privacyHash(string $value, string $source = ''): string
     {
@@ -187,7 +179,7 @@ class GenerateUniqueId extends Auth\ProcessingFilter
      * Process this filter
      *
      * @param mixed &$state
-     * @throws \SimpleSAML\Error\Exception
+     * @throws \SimpleSAML\Assert\AssertionFailedException
      * @return void
      */
     public function process(array &$state): void
@@ -206,8 +198,9 @@ class GenerateUniqueId extends Auth\ProcessingFilter
 
         foreach ($state['Attributes'][$this->scopeAttribute] as $scope) {
             if (strpos($scope, '@') !== false) {
-                $scope = explode('@', $scope, 2);
-                $scope = $scope[1];
+                $scopeParts = explode('@', $scope, 2);
+                /** @psalm-suppress PossiblyUndefinedArrayOffset */
+                $scope = $scopeParts[1];
             }
 
             foreach ($state['Attributes'][$this->sourceAttribute] as $value) {
@@ -223,7 +216,7 @@ class GenerateUniqueId extends Auth\ProcessingFilter
                         $uuid = $this->decodeUuidString($value);
                         break;
                     default:
-                        $uuid = preg_replace('/[^a-z0-9]/', '', $value);
+                        $uuid = preg_replace('/[^a-z0-9]/', '', (string) $value);
                 }
 
                 if ($uuid === null or $uuid === '') {
