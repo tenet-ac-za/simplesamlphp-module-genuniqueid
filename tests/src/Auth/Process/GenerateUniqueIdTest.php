@@ -48,7 +48,7 @@ final class GenerateUniqueIdTest extends TestCase
                     'eduPersonUniqueId' => ['853b9823799b40adbad74abdb3b4e57a@example.org'],
                 ],
             ],
-            $result
+            $result,
         );
     }
 
@@ -69,7 +69,7 @@ final class GenerateUniqueIdTest extends TestCase
                     'eduPersonUniqueId' => ['853b9823799b40adbad74abdb3b4e57a@example.org'],
                 ],
             ],
-            $result
+            $result,
         );
     }
 
@@ -87,7 +87,7 @@ final class GenerateUniqueIdTest extends TestCase
                 'targetAttribute' => 'output',
                 'scopeAttribute' => 'scope',
             ],
-            $request
+            $request,
         );
         $this->assertEquals(
             [
@@ -97,7 +97,7 @@ final class GenerateUniqueIdTest extends TestCase
                     'output' => ['853b9823799b40adbad74abdb3b4e57a@example.org'],
                 ],
             ],
-            $result
+            $result,
         );
     }
 
@@ -115,7 +115,7 @@ final class GenerateUniqueIdTest extends TestCase
                     'eduPersonPrincipalName' => ['example.org'],
                 ],
             ],
-            $result
+            $result,
         );
     }
 
@@ -134,7 +134,7 @@ final class GenerateUniqueIdTest extends TestCase
             [
                 'privacy' => true,
             ],
-            $request
+            $request,
         );
         $this->assertEquals(
             [
@@ -142,7 +142,7 @@ final class GenerateUniqueIdTest extends TestCase
                 'eduPersonPrincipalName' => ['example.org'],
                 'eduPersonUniqueId' => ['81c1c9dd97912c8b9bc2ac502ab984d455694992e455d3bd6b98ad68696e04ff@example.org'],
             ],
-            $result['Attributes']
+            $result['Attributes'],
         );
     }
 
@@ -162,7 +162,7 @@ final class GenerateUniqueIdTest extends TestCase
             [
                 'privacy' => true,
             ],
-            $request
+            $request,
         );
         $this->assertEquals(
             [
@@ -170,7 +170,7 @@ final class GenerateUniqueIdTest extends TestCase
                 'eduPersonPrincipalName' => ['example.org'],
                 'eduPersonUniqueId' => ['81c1c9dd97912c8b9bc2ac502ab984d455694992e455d3bd6b98ad68696e04ff@example.org'],
             ],
-            $result['Attributes']
+            $result['Attributes'],
         );
     }
 
@@ -188,7 +188,7 @@ final class GenerateUniqueIdTest extends TestCase
             [
                 'encoding' => 'unknown',
             ],
-            $request
+            $request,
         );
     }
 
@@ -204,7 +204,7 @@ final class GenerateUniqueIdTest extends TestCase
             [
                 'encoding' => 'microsoft',
             ],
-            $request
+            $request,
         );
         $this->assertEquals(
             [
@@ -214,7 +214,7 @@ final class GenerateUniqueIdTest extends TestCase
                     'eduPersonUniqueId' => ['853b9823799b40adbad74abdb3b4e57a@example.org'],
                 ],
             ],
-            $result
+            $result,
         );
     }
 
@@ -232,7 +232,7 @@ final class GenerateUniqueIdTest extends TestCase
             [
                 'encoding' => 'microsoft',
             ],
-            $request
+            $request,
         );
         $this->assertEquals($result['eduPersonUniqueId'], '');
     }
@@ -249,7 +249,7 @@ final class GenerateUniqueIdTest extends TestCase
             [
                 'encoding' => 'edirectory',
             ],
-            $request
+            $request,
         );
         $this->assertEquals(
             [
@@ -259,7 +259,7 @@ final class GenerateUniqueIdTest extends TestCase
                     'eduPersonUniqueId' => ['80e1f549b793da11ac6e0007e940f3ee@example.org'],
                 ],
             ],
-            $result
+            $result,
         );
     }
 
@@ -277,7 +277,7 @@ final class GenerateUniqueIdTest extends TestCase
             [
                 'encoding' => 'edirectory',
             ],
-            $request
+            $request,
         );
     }
 
@@ -293,7 +293,7 @@ final class GenerateUniqueIdTest extends TestCase
             [
                 'encoding' => 'openldap',
             ],
-            $request
+            $request,
         );
         $this->assertEquals(
             [
@@ -303,7 +303,7 @@ final class GenerateUniqueIdTest extends TestCase
                     'eduPersonUniqueId' => ['914af8a6d3961038966a1f617ea1a993@example.org'],
                 ],
             ],
-            $result
+            $result,
         );
     }
 
@@ -321,7 +321,7 @@ final class GenerateUniqueIdTest extends TestCase
             [
                 'encoding' => 'openldap',
             ],
-            $request
+            $request,
         );
     }
 }

@@ -73,7 +73,7 @@ class GenerateUniqueId extends Auth\ProcessingFilter
                 break;
             default:
                 throw new Error\Exception(
-                    'GenerateUniqueId: attribute encoding "' . $this->encoding . '" is not known.'
+                    'GenerateUniqueId: attribute encoding "' . $this->encoding . '" is not known.',
                 );
         }
         /* now allow it to be overridden in config */
@@ -105,8 +105,8 @@ class GenerateUniqueId extends Auth\ProcessingFilter
                 $unpacked['b2'],
                 $unpacked['c1'],
                 $unpacked['c2'],
-                $unpacked['d']
-            )
+                $unpacked['d'],
+            ),
         );
         Assert::length($guid, 32, 'unable to unpack ' . $this->sourceAttribute . ': repack failed');
         return $guid;
@@ -134,8 +134,8 @@ class GenerateUniqueId extends Auth\ProcessingFilter
                 $unpacked['b2'],
                 $unpacked['c1'],
                 $unpacked['c2'],
-                $unpacked['d']
-            )
+                $unpacked['d'],
+            ),
         );
         Assert::length($guid, 32, 'unable to unpack ' . $this->sourceAttribute . ': repack failed');
         return $guid;
@@ -153,7 +153,7 @@ class GenerateUniqueId extends Auth\ProcessingFilter
         preg_match(
             '/^([0-9a-f]{8})\-?([0-9a-f]{4})\-?([0-9a-f]{4})\-?([0-9a-f]{4})\-?([0-9a-f]{12})$/',
             strtolower($value),
-            $m
+            $m,
         );
         Assert::count($m, 6, 'unable to unpack ' . $this->sourceAttribute . ': wrong number of parts in uuid');
 
@@ -221,7 +221,7 @@ class GenerateUniqueId extends Auth\ProcessingFilter
 
                 if ($uuid === null or $uuid === '') {
                     Logger::warning(
-                        'GenerateUniqueId: cowardly refusing to generate an empty unique id'
+                        'GenerateUniqueId: cowardly refusing to generate an empty unique id',
                     );
                     continue;
                 }
