@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace SimpleSAML\Test\Module\genuniqueid\Auth\Process;
 
-use PHPUnit\Framework\TestCase;
 use SimpleSAML\Assert;
 use SimpleSAML\Configuration;
 use SimpleSAML\Error;
 use SimpleSAML\Module\genuniqueid\Auth\Process\GenerateUniqueId;
+use SimpleSAML\TestUtils\ClearStateTestCase;
 
-final class GenerateUniqueIdTest extends TestCase
+final class GenerateUniqueIdTest extends ClearStateTestCase
 {
     /**
      * Helper function to run the filter with a given configuration.
@@ -28,6 +28,7 @@ final class GenerateUniqueIdTest extends TestCase
 
     protected function setUp(): void
     {
+        parent::setUp();
         Configuration::loadFromArray(['secretsalt' => 'test'], '[ARRAY]', 'simplesaml');
     }
 
