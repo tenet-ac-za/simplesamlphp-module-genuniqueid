@@ -178,7 +178,7 @@ class GenerateUniqueId extends Auth\ProcessingFilter
     /**
      * Process this filter
      *
-     * @param mixed &$state
+     * @param array<mixed> &$state
      * @throws \SimpleSAML\Assert\AssertionFailedException
      * @return void
      */
