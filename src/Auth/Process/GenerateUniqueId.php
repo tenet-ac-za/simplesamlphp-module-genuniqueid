@@ -35,6 +35,7 @@ class GenerateUniqueId extends Auth\ProcessingFilter
     /** @var bool|false $privacy Whether to hash the resulting UUID to preserve privacy */
     private bool $privacy = false;
 
+
     /**
      * Initialize this filter, parse configuration.
      *
@@ -82,6 +83,7 @@ class GenerateUniqueId extends Auth\ProcessingFilter
         }
     }
 
+
     /**
      * Decode Microsoft's mixed-endian binary encoding
      * http://php.net/manual/en/function.mssql-guid-string.php#119391
@@ -112,6 +114,7 @@ class GenerateUniqueId extends Auth\ProcessingFilter
         return $guid;
     }
 
+
     /**
      * Decode big-endian binary encoding
      *
@@ -141,6 +144,7 @@ class GenerateUniqueId extends Auth\ProcessingFilter
         return $guid;
     }
 
+
     /**
      * Decode textual UUID
      *
@@ -162,6 +166,7 @@ class GenerateUniqueId extends Auth\ProcessingFilter
         return $guid;
     }
 
+
     /**
      * Generate a privacy-preserving hash
      *
@@ -174,6 +179,7 @@ class GenerateUniqueId extends Auth\ProcessingFilter
         $salter = new Utils\Config();
         return hash('sha256', $value . '|' . $salter->getSecretSalt() . '|' . $source);
     }
+
 
     /**
      * Process this filter

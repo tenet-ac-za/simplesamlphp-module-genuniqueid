@@ -26,11 +26,13 @@ final class GenerateUniqueIdTest extends ClearStateTestCase
         return $request;
     }
 
+
     protected function setUp(): void
     {
         parent::setUp();
         Configuration::loadFromArray(['secretsalt' => 'test'], '[ARRAY]', 'simplesaml');
     }
+
 
     public function testNoConfig(): void
     {
@@ -53,6 +55,7 @@ final class GenerateUniqueIdTest extends ClearStateTestCase
         );
     }
 
+
     public function testScopeAttributeWithAt(): void
     {
         $request = [
@@ -73,6 +76,7 @@ final class GenerateUniqueIdTest extends ClearStateTestCase
             $result,
         );
     }
+
 
     public function testDifferentAttributes(): void
     {
@@ -102,6 +106,7 @@ final class GenerateUniqueIdTest extends ClearStateTestCase
         );
     }
 
+
     public function testEmpty(): void
     {
         $request = [
@@ -119,6 +124,7 @@ final class GenerateUniqueIdTest extends ClearStateTestCase
             $result,
         );
     }
+
 
     public function testPrivacyHash(): void
     {
@@ -146,6 +152,7 @@ final class GenerateUniqueIdTest extends ClearStateTestCase
             $result['Attributes'],
         );
     }
+
 
     public function testPrivacyHashProxied(): void
     {
@@ -175,6 +182,7 @@ final class GenerateUniqueIdTest extends ClearStateTestCase
         );
     }
 
+
     public function testUnknownFormat(): void
     {
         $request = [
@@ -192,6 +200,7 @@ final class GenerateUniqueIdTest extends ClearStateTestCase
             $request,
         );
     }
+
 
     public function testMicrosoft(): void
     {
@@ -219,6 +228,7 @@ final class GenerateUniqueIdTest extends ClearStateTestCase
         );
     }
 
+
     public function testBogusMicrosoft(): void
     {
         $request = [
@@ -237,6 +247,7 @@ final class GenerateUniqueIdTest extends ClearStateTestCase
         );
         $this->assertEquals($result['eduPersonUniqueId'], '');
     }
+
 
     public function testEdirectory(): void
     {
@@ -264,6 +275,7 @@ final class GenerateUniqueIdTest extends ClearStateTestCase
         );
     }
 
+
     public function testBogusEdirectory(): void
     {
         $request = [
@@ -281,6 +293,7 @@ final class GenerateUniqueIdTest extends ClearStateTestCase
             $request,
         );
     }
+
 
     public function testOpenLdap(): void
     {
@@ -307,6 +320,7 @@ final class GenerateUniqueIdTest extends ClearStateTestCase
             $result,
         );
     }
+
 
     public function testBogusOpenLdap(): void
     {
